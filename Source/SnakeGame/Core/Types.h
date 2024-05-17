@@ -6,22 +6,22 @@
 
 namespace SnakeGame
 {
-	struct Dimensions
-	{
-		int32 width;
-		int32 height;
-	};
+struct Dimensions
+{
+    int32 width;
+    int32 height;
+};
 
-	enum class CellyType
-	{
-		Empty,
-		Wall,
-		//Food
-		//Snake
-	};
+enum class CellyType
+{
+    Empty,
+    Wall,
+    // Food
+    // Snake
+};
 
-	struct Settings
-	{
-		Dimensions gridSize;
-	};
-}
+struct Settings
+{
+    Dimensions gridSize;
+};
+}  // namespace SnakeGame
