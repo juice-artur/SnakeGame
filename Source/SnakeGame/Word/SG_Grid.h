@@ -9,8 +9,10 @@
 
 namespace SnakeGame
 {
-    class Grid;
+class Grid;
 }
+
+class UStaticMeshComponent;
 
 UCLASS()
 class SNAKEGAME_API ASG_Grid : public AActor
@@ -22,8 +24,14 @@ public:
     virtual void Tick(float DeltaTime) override;
     void SetModel(const TSharedPtr<SnakeGame::Grid>& Grid, int32 InCellSize);
 
-
 protected:
+    UPROPERTY(VisibleAnywhere)
+    USceneComponent* Origin;
+
+    
+    UPROPERTY(VisibleAnywhere)
+    UStaticMeshComponent* GridMesh;
+
     virtual void BeginPlay() override;
 
 private:
