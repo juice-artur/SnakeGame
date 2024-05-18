@@ -3,13 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Types.h"
 
-/**
- * 
- */
-class SNAKEGAME_API Grid
+namespace SnakeGame
+{
+
+class Grid
 {
 public:
-	Grid();
-	~Grid();
+    Grid(const Dimensions& dim);
+    Dimensions getDimensions() const { return c_dimensions; }
+
+private:
+    const Dimensions c_dimensions;
+    TArray<CellyType> m_cells;
+
+    void initWalls();
+    void printDebug();
+    FORCEINLINE int32 positionToIndex(int32 x, int32 y) const;
 };
+}  // namespace SnakeGame
