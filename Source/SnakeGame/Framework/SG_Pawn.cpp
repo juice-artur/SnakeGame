@@ -13,6 +13,8 @@ float VerticalFOV(float HorFOVDegrees, float ViewportAspectHW)
     return FMath::RadiansToDegrees(2.0f * FMath::Atan(FMath::Tan(FMath::DegreesToRadians(HorFOVDegrees) * 0.5f) * ViewportAspectHW));
 }
 
+constexpr double GridMargin = 2.0;
+
 }  // namespace
 
 ASG_Pawn::ASG_Pawn()
@@ -39,7 +41,8 @@ void ASG_Pawn::UpdateLocation(const SnakeGame::Dimensions& InDim, int32 InCellSi
     check(GEngine->GameViewport->Viewport);
 
     auto* Viewport = GEngine->GameViewport->Viewport;
-    Viewport->ViewportResizedEvent.AddUObject(this, &ASG_Pawn::OnViewportResized);
+    Viewport->ViewportResizedEvent.Remove(ResizeHandle);
+    ResizeHandle = Viewport->ViewportResizedEvent.AddUObject(this, &ASG_Pawn::OnViewportResized);
 
 #if WITH_EDITOR
     OnViewportResized(Viewport, 0);

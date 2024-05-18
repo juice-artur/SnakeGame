@@ -32,14 +32,17 @@ protected:
     UDataTable* ColorsTable;
 
 private:
-    TUniquePtr<SnakeGame::Game> Game;
     UPROPERTY()
     ASG_Grid* GridVisual;
 
     UPROPERTY()
     AExponentialHeightFog* Fog;
 
+    UFUNCTION(Exec, Category = "Console command")
+    void NextColor();
+
     uint32 ColorTableIndex{0};
+    TUniquePtr<SnakeGame::Game> Game;
 
     void FindFog();
     void UpdateColors();

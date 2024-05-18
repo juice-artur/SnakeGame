@@ -40,6 +40,12 @@ void ASG_GameMode::StartPlay()
     UpdateColors();
 }
 
+void ASG_GameMode::NextColor() 
+{
+    ColorTableIndex = (ColorTableIndex + 1) % ColorsTable->GetRowNames().Num();
+    UpdateColors();
+}
+
 void ASG_GameMode::UpdateColors()
 {
     const auto RowName = ColorsTable->GetRowNames()[ColorTableIndex];
