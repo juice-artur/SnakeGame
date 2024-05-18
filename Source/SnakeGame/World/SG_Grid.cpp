@@ -10,7 +10,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogWorldGame, All, All);
 
 ASG_Grid::ASG_Grid()
 {
-    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = false;
 
     
     Origin = CreateDefaultSubobject<USceneComponent>("Origin");
@@ -53,10 +53,20 @@ void ASG_Grid::SetModel(const TSharedPtr<SnakeGame::Grid>& Grid, int32 InCellSiz
     }
 }
 
+void ASG_Grid::UpdateColors(const FSnakeColors& Colors) 
+{
+    if (GridMaterial)
+    {
+        GridMaterial->SetVectorParameterValue("BackgroundColor", Colors.GridBackgroundColor);
+        GridMaterial->SetVectorParameterValue("LineColor", Colors.GridLineColor);
+        GridMaterial->SetVectorParameterValue("WallColor", Colors.GridWallColor);
+    }
+}
+
 void ASG_Grid::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-    DrawGrid();
+  //  DrawGrid();
 }
 
 void ASG_Grid::DrawGrid()
