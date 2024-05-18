@@ -35,6 +35,9 @@ protected:
     virtual void BeginPlay() override;
 
 private:
+    UPROPERTY()
+    UMaterialInstanceDynamic* GridMaterial;
+
     SnakeGame::Dimensions GridDim;
     int32 CellSize;
     int32 WorldWidth;

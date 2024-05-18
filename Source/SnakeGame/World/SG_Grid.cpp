@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Word/SG_Grid.h"
+#include "World/SG_Grid.h"
 #include "Core/Grid.h"
 #include "DrawDebugHelpers.h"
 #include "Components/LineBatchComponent.h"
@@ -45,6 +45,12 @@ void ASG_Grid::SetModel(const TSharedPtr<SnakeGame::Grid>& Grid, int32 InCellSiz
 
     GridMesh->SetRelativeScale3D(FVector(WorldHeight / Size.X, WorldWidth/ Size.Y, 1.0f));
     GridMesh->SetRelativeLocation(0.5 * FVector(WorldHeight, WorldWidth, -Size.Z));
+
+    GridMaterial = GridMesh->CreateAndSetMaterialInstanceDynamic(0);
+    if (GridMaterial)
+    {
+        GridMaterial->SetVectorParameterValue("Division", FVector(GridDim.height, GridDim.width, 0.0));
+    }
 }
 
 void ASG_Grid::Tick(float DeltaTime)

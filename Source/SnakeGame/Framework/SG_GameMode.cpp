@@ -2,7 +2,7 @@
 
 #include "SG_GameMode.h"
 #include "SnakeGame/Core/Types.h"
-#include "Word/SG_Grid.h"
+#include "World/SG_Grid.h"
 #include "Framework/SG_Pawn.h"
 #include "Core/Grid.h"
 
