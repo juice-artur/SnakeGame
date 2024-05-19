@@ -21,7 +21,7 @@ void Grid::initWalls()
         {
             if (x == 0 || x == c_dimensions.width - 1 || y == 0 || y == c_dimensions.height - 1)
             {
-                m_cells[positionToIndex(x, y)] = CellyType::Wall;
+                m_cells[possitionToIndex(x, y)] = CellyType::Wall;
             }
         }
     }
@@ -35,7 +35,7 @@ void Grid::printDebug()
         for (uint32 x = 0; x < c_dimensions.width; x++)
         {
             TCHAR symbol;
-            switch (m_cells[positionToIndex(x, y)])
+            switch (m_cells[possitionToIndex(x, y)])
             {
                 case CellyType::Empty: symbol = '0'; break;
                 case CellyType::Wall: symbol = '*'; break;
@@ -50,21 +50,41 @@ void Grid::printDebug()
 
 void Grid::update(const TPositionPtr* links, CellyType cellType)
 {
+    freeCellsByType(cellType);
     auto* link = links;
     while (link)
     {
-        const auto index = positionToIndex(link->GetValue());
+        const auto index = possitionToIndex(link->GetValue());
         m_cells[index] = cellType;
         link = link->GetNextNode();
     }
 }
 
-int32 Grid::positionToIndex(int32 x, int32 y) const
+
+void Grid::freeCellsByType(CellyType cellType) 
+{
+    for (auto& cell : m_cells)
+    {
+        if (cell == cellType)
+        {   
+            cell = CellyType::Empty;
+        }
+    }
+}
+
+
+bool Grid::hitTest(const Position& possition, CellyType cellType) const
+{
+    return m_cells[possitionToIndex(possition)] == cellType;
+}
+
+int32 Grid::possitionToIndex(int32 x, int32 y) const
 {
     return x + y * c_dimensions.width;
 }
 
-int32 Grid::positionToIndex(const Position& possition) const
+int32 Grid::possitionToIndex(const Position& possition) const
 {
-    return positionToIndex(possition.x, possition.y);
+    return possitionToIndex(possition.x, possition.y);
 }
+

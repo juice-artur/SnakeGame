@@ -15,6 +15,8 @@ public:
     Position getHead() const { return m_links.GetHead()->GetValue(); }
     const TPositionPtr* getBody() const { return m_links.GetHead()->GetNextNode(); }
 
+    void move(const Input& input);
+
 private:
     TSnakeList m_links;
 };

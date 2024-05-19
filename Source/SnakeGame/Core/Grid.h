@@ -15,13 +15,15 @@ public:
     Dimensions getDimensions() const { return c_dimensions; }
     void printDebug();
     void update(const TPositionPtr* links, CellyType cellType);
+    bool hitTest(const Position& possition, CellyType cellType) const;
 
 private:
     const Dimensions c_dimensions;
     TArray<CellyType> m_cells;
 
     void initWalls();
-    FORCEINLINE int32 positionToIndex(int32 x, int32 y) const;
-    FORCEINLINE int32 positionToIndex(const Position& possition) const;
+    FORCEINLINE int32 possitionToIndex(int32 x, int32 y) const;
+    FORCEINLINE int32 possitionToIndex(const Position& possition) const;
+    void freeCellsByType(CellyType cellType);
 };
 }  // namespace SnakeGame

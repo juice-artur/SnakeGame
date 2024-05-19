@@ -17,6 +17,7 @@ void ASG_GameMode::StartPlay()
     GS.gridSize = SnakeGame::Dimensions({GridSize.X, GridSize.Y});
     GS.snake.defaultSize = SnakeDefaultSize;
     GS.snake.startPosition = SnakeGame::Position{GridSize.X / 2 , GridSize.Y / 2};
+    GS.gameSpeed = GameSpeed;
 
     Game = MakeUnique<SnakeGame::Game>(GS);
     check(Game.IsValid());
@@ -43,6 +44,7 @@ void ASG_GameMode::StartPlay()
     FindFog();
     UpdateColors();
 }
+
 
 void ASG_GameMode::NextColor() 
 {
@@ -74,4 +76,20 @@ void ASG_GameMode::FindFog()
     {
         Fog = Cast<AExponentialHeightFog>(Fogs[0]);
     }
+}
+
+
+void ASG_GameMode::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+
+    if (Game.IsValid())
+    {
+        Game->update(DeltaSeconds, SnakeInput);
+    }
+}
+
+ASG_GameMode::ASG_GameMode() 
+{
+    PrimaryActorTick.bCanEverTick = true;
 }
