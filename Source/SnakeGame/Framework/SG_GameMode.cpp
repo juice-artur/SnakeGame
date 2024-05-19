@@ -3,6 +3,7 @@
 #include "SG_GameMode.h"
 #include "SnakeGame/Core/Types.h"
 #include "World/SG_Grid.h"
+#include "World/SG_Snake.h"
 #include "Framework/SG_Pawn.h"
 #include "World/SG_WorldTypes.h"
 #include "Core/Grid.h"
@@ -28,6 +29,10 @@ void ASG_GameMode::StartPlay()
     check(GridVisual);
     GridVisual->SetModel(Game->getGrid(), CellSize);
     GridVisual->FinishSpawning(GridOrigin);
+
+    SnakeVisual = GetWorld()->SpawnActorDeferred<ASG_Snake>(SnakeVisualClass, GridOrigin);
+    SnakeVisual->SetModel(Game->getSnake(), CellSize, Game->getGrid()->getDimensions());
+    SnakeVisual->FinishSpawning(GridOrigin);
 
     auto* PC = GetWorld()->GetFirstPlayerController();
     check(PC);
