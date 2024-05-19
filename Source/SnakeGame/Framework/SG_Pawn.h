@@ -29,5 +29,6 @@ private:
     SnakeGame::Dimensions Dim;
     int32 CellSize;
     FTransform GridOrigin;
+    FDelegateHandle ResizeHandle;
     void OnViewportResized(FViewport* Viewport, uint32 Val);
 };

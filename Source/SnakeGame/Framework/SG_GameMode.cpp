@@ -2,16 +2,20 @@
 
 #include "SG_GameMode.h"
 #include "SnakeGame/Core/Types.h"
-#include "Word/SG_Grid.h"
+#include "World/SG_Grid.h"
 #include "Framework/SG_Pawn.h"
+#include "World/SG_WorldTypes.h"
 #include "Core/Grid.h"
+#include "Engine/ExponentialHeightFog.h"
+#include "Components/ExponentialHeightFogComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 void ASG_GameMode::StartPlay()
 {
     Super::StartPlay();
     const SnakeGame::Settings GS({GridSize.X, GridSize.Y});
     Game = MakeUnique<SnakeGame::Game>(GS);
-    check(Game.IsValid())
+    check(Game.IsValid());
 
     const FTransform GridOrigin = FTransform::Identity;
     check(GetWorld());
@@ -27,4 +31,43 @@ void ASG_GameMode::StartPlay()
     check(Pawn);
     check(Game->getGrid().IsValid());
     Pawn->UpdateLocation(Game->getGrid()->getDimensions(), CellSize, GridOrigin);
+    check(ColorsTable);
+
+    const auto RowsCount = ColorsTable->GetRowNames().Num();
+    check(RowsCount >= 1);
+    ColorTableIndex = FMath::RandRange(0, RowsCount - 1);
+    FindFog();
+    UpdateColors();
+}
+
+void ASG_GameMode::NextColor() 
+{
+    ColorTableIndex = (ColorTableIndex + 1) % ColorsTable->GetRowNames().Num();
+    UpdateColors();
+}
+
+void ASG_GameMode::UpdateColors()
+{
+    const auto RowName = ColorsTable->GetRowNames()[ColorTableIndex];
+    const auto* ColorSet = ColorsTable->FindRow<FSnakeColors>(RowName, {});
+    if (ColorSet)
+    {
+        GridVisual->UpdateColors(*ColorSet);
+
+        if (Fog && Fog->GetComponent())
+        {
+            Fog->GetComponent()->SkyAtmosphereAmbientContributionColorScale = ColorSet->SkyAtmosphereColor;
+            Fog->MarkComponentsRenderStateDirty();
+        }
+    }
+}
+
+void ASG_GameMode::FindFog()
+{
+    TArray<AActor*> Fogs;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), AExponentialHeightFog::StaticClass(), Fogs);
+    if (Fogs.Num() > 0)
+    {
+        Fog = Cast<AExponentialHeightFog>(Fogs[0]);
+    }
 }
