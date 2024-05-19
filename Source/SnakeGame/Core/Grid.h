@@ -13,13 +13,15 @@ class Grid
 public:
     Grid(const Dimensions& dim);
     Dimensions getDimensions() const { return c_dimensions; }
+    void printDebug();
+    void update(const TPositionPtr* links, CellyType cellType);
 
 private:
     const Dimensions c_dimensions;
     TArray<CellyType> m_cells;
 
     void initWalls();
-    void printDebug();
     FORCEINLINE int32 positionToIndex(int32 x, int32 y) const;
+    FORCEINLINE int32 positionToIndex(const Position& possition) const;
 };
 }  // namespace SnakeGame
