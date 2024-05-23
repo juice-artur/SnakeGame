@@ -6,7 +6,7 @@ namespace
 {
 FVector LinkPositionToVector(const SnakeGame::Position& Position, uint32 CellSize, const SnakeGame::Dimensions& Dims)
 {
-    return FVector(Position.y * CellSize, Position.x * CellSize, 0.0f);
+    return FVector((Dims.height - 1 - Position.y) * CellSize, Position.x * CellSize, 0.0f) + FVector(CellSize * 0.5);
 }
 }  // namespace
 
