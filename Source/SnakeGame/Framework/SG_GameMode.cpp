@@ -48,6 +48,8 @@ void ASG_GameMode::StartPlay()
     ColorTableIndex = FMath::RandRange(0, RowsCount - 1);
     FindFog();
     UpdateColors();
+
+    SetupInput();
 }
 
 
@@ -72,6 +74,12 @@ void ASG_GameMode::UpdateColors()
         }
     }
 }
+
+void ASG_GameMode::SetupInput() {}
+
+void ASG_GameMode::OnMoveForward(const FInputActionValue& Value) {}
+
+void ASG_GameMode::OnMoveRight(const FInputActionValue& Value) {}
 
 void ASG_GameMode::FindFog()
 {
