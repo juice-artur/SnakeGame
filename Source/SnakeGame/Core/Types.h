@@ -17,6 +17,11 @@ struct Input
 {
     int8 x;
     int8 y;
+
+    FORCEINLINE bool opposite(const Input& rhs) const 
+    {
+        return (x == -rhs.x && x != 0) || (y == -rhs.y && y != 0);
+    }
 };
 
 struct Position

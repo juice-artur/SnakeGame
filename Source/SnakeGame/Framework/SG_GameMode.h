@@ -54,6 +54,9 @@ protected:
     TObjectPtr<UInputAction> MoveRightInputAction;
 
     UPROPERTY(EditDefaultsOnly, Category = "SnakeInput")
+    TObjectPtr<UInputAction> ResetGameInputAction;
+
+    UPROPERTY(EditDefaultsOnly, Category = "SnakeInput")
     TObjectPtr<UInputMappingContext> InputMapping;
 
 private:
@@ -79,4 +82,7 @@ private:
     void SetupInput();
     void OnMoveForward(const FInputActionValue& Value);
     void OnMoveRight(const FInputActionValue& Value);
+    void OnGameReset(const FInputActionValue& Value);
+
+    SnakeGame::Settings MakeSettings() const;
 };

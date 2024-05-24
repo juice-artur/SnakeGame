@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Core/Snake.h"
+#include "World/SG_WorldTypes.h"
 #include "SG_Snake.generated.h"
+
+class ASG_SnakeLink;
 
 UCLASS()
 class SNAKEGAME_API ASG_Snake : public AActor
@@ -16,6 +19,7 @@ public:
     ASG_Snake();
 
     void SetModel(const TSharedPtr<SnakeGame::Snake>& InSnake, uint32 InCellSize, const SnakeGame::Dimensions& InDims);
+    void UpdateColors(const FSnakeColors& Colors);
     virtual void Tick(float DeltaTime) override;
 
 protected:
@@ -32,5 +36,5 @@ private:
     SnakeGame::Dimensions Dims;
 
     UPROPERTY()
-    TArray<AActor*> SnakeLinks;
+    TArray<ASG_SnakeLink*> SnakeLinks;
 };

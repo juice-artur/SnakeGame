@@ -20,7 +20,11 @@ Snake::Snake(const Settings::Snake& settings)
 
 void SnakeGame::Snake::move(const Input& input)
 {
+    if (!m_lastInput.opposite(input))
+    {
+        m_lastInput = input;
+    }
     m_links.RemoveNode(m_links.GetTail());
     m_links.InsertNode(m_links.GetHead()->GetValue(), m_links.GetHead()->GetNextNode());
-    m_links.GetHead()->GetValue() += Position(input.x, input.y);
+    m_links.GetHead()->GetValue() += Position(m_lastInput.x, m_lastInput.y);
 }
