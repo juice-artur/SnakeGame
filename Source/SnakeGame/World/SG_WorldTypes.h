@@ -7,7 +7,7 @@
 #include "SG_WorldTypes.generated.h"
 
 USTRUCT(BlueprintType)
-struct FSnakeColors: public FTableRowBase
+struct FSnakeColors : public FTableRowBase
 {
     GENERATED_BODY()
 
@@ -22,4 +22,10 @@ struct FSnakeColors: public FTableRowBase
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     FLinearColor SkyAtmosphereColor;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    FLinearColor SnakeHeadColor;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    FLinearColor SnakeLinkColor;
 };
