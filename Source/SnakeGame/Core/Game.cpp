@@ -63,6 +63,6 @@ bool SnakeGame::Game::died()
 
 void SnakeGame::Game::generateFood() 
 {
-    m_food->setPosition(Position{1, 1});
+    m_food->setPosition(m_grid->randomEmptyPosition());
     m_grid->update(m_food->getPosition(), CellType::Food);
 }

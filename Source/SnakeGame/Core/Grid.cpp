@@ -90,6 +90,29 @@ bool Grid::hitTest(const Position& possition, CellType cellType) const
     return m_cells[possitionToIndex(possition)] == cellType;
 }
 
+Position Grid::randomEmptyPosition() const
+{
+    const auto gridSize = c_dimensions.height * c_dimensions.width;
+    const uint32 index = FMath::RandRange(0, gridSize);
+    for (uint32 i = index; i < gridSize; i++)
+    {
+        if (m_cells[i] == CellType::Empty)
+        {
+            return indexToPossition(i);
+        }
+    }
+    for (uint32 i = 0; i < index; i++)
+    {
+        if (m_cells[i] == CellType::Empty)
+        {
+            return indexToPossition(i);
+        }
+    }
+    UE_LOG(LogGrid, Error, TEXT("Empty cell dosen`t exist"));
+    checkNoEntry();
+    return Position::Zero;
+}
+
 int32 Grid::possitionToIndex(int32 x, int32 y) const
 {
     return x + y * c_dimensions.width;
@@ -98,4 +121,9 @@ int32 Grid::possitionToIndex(int32 x, int32 y) const
 int32 Grid::possitionToIndex(const Position& possition) const
 {
     return possitionToIndex(possition.x, possition.y);
+}
+
+Position SnakeGame::Grid::indexToPossition(uint32 index) const
+{
+    return Position(index % c_dimensions.width, index / c_dimensions.width);
 }
