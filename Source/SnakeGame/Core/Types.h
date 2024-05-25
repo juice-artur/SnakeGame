@@ -18,10 +18,9 @@ struct Input
     int8 x;
     int8 y;
 
-    FORCEINLINE bool opposite(const Input& rhs) const 
-    {
-        return (x == -rhs.x && x != 0) || (y == -rhs.y && y != 0);
-    }
+    FORCEINLINE bool opposite(const Input& rhs) const { return (x == -rhs.x && x != 0) || (y == -rhs.y && y != 0); }
+
+    static Input Default;
 };
 
 struct Position
@@ -36,6 +35,10 @@ struct Position
         y += rhs.y;
         return *this;
     }
+
+    FORCEINLINE bool operator==(const Position& rhs) { return x == rhs.x && y == rhs.y; }
+
+    static Position Zero;
 };
 
 enum class CellyType
@@ -43,7 +46,7 @@ enum class CellyType
     Empty,
     Wall,
     Snake,
-    // Food
+    Food,
 };
 
 struct Settings

@@ -26,9 +26,9 @@ protected:
     virtual void BeginPlay() override;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-    TSubclassOf<AActor> SnakeHeadClass;
+    TSubclassOf<ASG_SnakeLink> SnakeHeadClass;
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-    TSubclassOf<AActor> SnakeLinkClass;
+    TSubclassOf<ASG_SnakeLink> SnakeLinkClass;
 
 private:
     TWeakPtr<SnakeGame::Snake> Snake;

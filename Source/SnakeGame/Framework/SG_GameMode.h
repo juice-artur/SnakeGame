@@ -62,7 +62,7 @@ protected:
 private:
     uint32 ColorTableIndex{0};
     TUniquePtr<SnakeGame::Game> Game;
-    SnakeGame::Input SnakeInput{1, 0};
+    SnakeGame::Input SnakeInput{SnakeGame::Input::Default};
 
     UPROPERTY()
     ASG_Grid* GridVisual;

@@ -16,6 +16,7 @@ public:
     void printDebug();
     void update(const TPositionPtr* links, CellyType cellType);
     bool hitTest(const Position& possition, CellyType cellType) const;
+    static Position center(uint32 width, uint32 height) { return Position(width / 2 + 1, height / 2 + 1); }
 
 private:
     const Dimensions c_dimensions;

@@ -76,7 +76,7 @@ void ASG_GameMode::SetupInput()
 {
     if (!GetWorld()) return;
 
-    if (auto* PC = Cast<APlayerController>(GetWorld()->GetFirstPlayerController()))
+    if (auto* PC = GetWorld()->GetFirstPlayerController())
     {
         if (auto* InputSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
         {
@@ -85,24 +85,24 @@ void ASG_GameMode::SetupInput()
 
         auto* Input = Cast<UEnhancedInputComponent>(PC->InputComponent);
         check(Input);
-        Input->BindAction(MoveForwardInputAction, ETriggerEvent::Triggered, this, &ThisClass::OnMoveForward);
-        Input->BindAction(MoveRightInputAction, ETriggerEvent::Triggered, this, &ThisClass::OnMoveRight);
+        Input->BindAction(MoveForwardInputAction, ETriggerEvent::Started, this, &ThisClass::OnMoveForward);
+        Input->BindAction(MoveRightInputAction, ETriggerEvent::Started, this, &ThisClass::OnMoveRight);
         Input->BindAction(ResetGameInputAction, ETriggerEvent::Started, this, &ThisClass::OnGameReset);
     }
 }
 
 void ASG_GameMode::OnMoveForward(const FInputActionValue& Value)
 {
-    const FVector2D InputValue = Value.Get<FVector2D>();
-    if (InputValue.X == 0.0) return;
-    SnakeInput = SnakeGame::Input{0, static_cast<int8>(InputValue.X)};
+    const float InputValue = Value.Get<float>();
+    if (InputValue == 0.0) return;
+    SnakeInput = SnakeGame::Input{0, static_cast<int8>(InputValue)};
 }
 
 void ASG_GameMode::OnMoveRight(const FInputActionValue& Value)
 {
-    const FVector2D InputValue = Value.Get<FVector2D>();
-    if (InputValue.X == 0.0) return;
-    SnakeInput = SnakeGame::Input{static_cast<int8>(InputValue.X), 0};
+    const float InputValue = Value.Get<float>();
+    if (InputValue == 0.0) return;
+    SnakeInput = SnakeGame::Input{static_cast<int8>(InputValue), 0};
 }
 
 void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
@@ -113,7 +113,7 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
         check(Game.IsValid());
         GridVisual->SetModel(Game->getGrid(), CellSize);
         SnakeVisual->SetModel(Game->getSnake(), CellSize, Game->getGrid()->getDimensions());
-        SnakeInput = SnakeGame::Input{1, 0};
+        SnakeInput = SnakeGame::Input::Default;
         NextColor();
     }
 }
@@ -150,6 +150,6 @@ SnakeGame::Settings ASG_GameMode::MakeSettings() const
     GS.gridSize = SnakeGame::Dimensions{GridSize.X, GridSize.Y};
     GS.gameSpeed = GameSpeed;
     GS.snake.defaultSize = SnakeDefaultSize;
-    GS.snake.startPosition = SnakeGame::Position{GridSize.X / 2 + 1, GridSize.Y / 2 + 1};
+    GS.snake.startPosition = SnakeGame::Grid::center(GridSize.X, GridSize.Y);
     return GS;
 }
