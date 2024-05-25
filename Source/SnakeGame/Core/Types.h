@@ -41,7 +41,7 @@ struct Position
     static Position Zero;
 };
 
-enum class CellyType
+enum class CellType
 {
     Empty,
     Wall,
