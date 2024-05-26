@@ -14,12 +14,15 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogSnakeGameMode, All, All);
+
 void ASG_GameMode::StartPlay()
 {
     Super::StartPlay();
 
     Game = MakeUnique<SnakeGame::Game>(MakeSettings());
     check(Game.IsValid());
+    SubscribeOnGameEvents();
 
     const FTransform GridOrigin = FTransform::Identity;
     check(GetWorld());
@@ -117,6 +120,7 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
     {
         Game.Reset(new SnakeGame::Game(MakeSettings()));
         check(Game.IsValid());
+        SubscribeOnGameEvents();
         GridVisual->SetModel(Game->getGrid(), CellSize);
         SnakeVisual->SetModel(Game->getSnake(), CellSize, Game->getGrid()->getDimensions());
         FoodVisual->SetModel(Game->getFood(), CellSize, Game->getGrid()->getDimensions());
@@ -158,4 +162,27 @@ SnakeGame::Settings ASG_GameMode::MakeSettings() const
     GS.snake.defaultSize = SnakeDefaultSize;
     GS.snake.startPosition = SnakeGame::Grid::center(GridSize.X, GridSize.Y);
     return GS;
+}
+
+void ASG_GameMode::SubscribeOnGameEvents()
+{
+    using namespace SnakeGame;
+    Game->subscribeOnGameplayEvent(
+        [&](GameplayEvent Event)
+        {
+            switch (Event)
+            {
+                case GameplayEvent::GameOver:
+                    UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME OVER --------------"));
+                    UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
+                    break;
+                case GameplayEvent::GameCompleted:
+                    UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME COMPLETED --------------"));
+                    UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
+                    break;
+                case GameplayEvent::FoodTaken:  //
+                    UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- FOOD TAKEN --------------"));
+                    break;
+            }
+        });
 }
