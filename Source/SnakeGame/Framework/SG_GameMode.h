@@ -94,4 +94,5 @@ private:
     SnakeGame::Settings MakeSettings() const;
 
     void SubscribeOnGameEvents();
+
 };

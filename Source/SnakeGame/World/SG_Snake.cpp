@@ -80,3 +80,11 @@ void ASG_Snake::Tick(float DeltaTime)
         LinkPtr = LinkPtr->GetNextNode();
     }
 }
+
+void ASG_Snake::Explode()
+{
+    for (auto* LinkActor : SnakeLinks)
+    {
+        LinkActor->Explode();
+    }
+}

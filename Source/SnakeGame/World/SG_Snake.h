@@ -21,6 +21,7 @@ public:
     void SetModel(const TSharedPtr<SnakeGame::Snake>& InSnake, uint32 InCellSize, const SnakeGame::Dimensions& InDims);
     void UpdateColor(const FSnakeColors& Colors);
     virtual void Tick(float DeltaTime) override;
+    void Explode();
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
