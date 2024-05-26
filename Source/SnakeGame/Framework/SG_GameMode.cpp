@@ -4,6 +4,7 @@
 #include "SnakeGame/Core/Types.h"
 #include "World/SG_Grid.h"
 #include "World/SG_Snake.h"
+#include "World/SG_Food.h"
 #include "Framework/SG_Pawn.h"
 #include "World/SG_WorldTypes.h"
 #include "Core/Grid.h"
@@ -30,6 +31,10 @@ void ASG_GameMode::StartPlay()
     SnakeVisual = GetWorld()->SpawnActorDeferred<ASG_Snake>(SnakeVisualClass, GridOrigin);
     SnakeVisual->SetModel(Game->getSnake(), CellSize, Game->getGrid()->getDimensions());
     SnakeVisual->FinishSpawning(GridOrigin);
+
+    FoodVisual = GetWorld()->SpawnActorDeferred<ASG_Food>(FoodVisualClass, GridOrigin);
+    FoodVisual->SetModel(Game->getFood(), CellSize, Game->getGrid()->getDimensions());
+    FoodVisual->FinishSpawning(GridOrigin);
 
     auto* PC = GetWorld()->GetFirstPlayerController();
     check(PC);
@@ -62,7 +67,8 @@ void ASG_GameMode::UpdateColors()
     if (ColorSet)
     {
         GridVisual->UpdateColors(*ColorSet);
-        SnakeVisual->UpdateColors(*ColorSet);
+        SnakeVisual->UpdateColor(*ColorSet);
+        FoodVisual->UpdateColor(ColorSet->FoodColor);
 
         if (Fog && Fog->GetComponent())
         {
@@ -113,6 +119,7 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
         check(Game.IsValid());
         GridVisual->SetModel(Game->getGrid(), CellSize);
         SnakeVisual->SetModel(Game->getSnake(), CellSize, Game->getGrid()->getDimensions());
+        FoodVisual->SetModel(Game->getFood(), CellSize, Game->getGrid()->getDimensions());
         SnakeInput = SnakeGame::Input::Default;
         NextColor();
     }
@@ -142,7 +149,6 @@ ASG_GameMode::ASG_GameMode()
 {
     PrimaryActorTick.bCanEverTick = true;
 }
-
 
 SnakeGame::Settings ASG_GameMode::MakeSettings() const
 {

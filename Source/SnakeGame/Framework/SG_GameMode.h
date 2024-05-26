@@ -11,6 +11,7 @@
 
 class ASG_Grid;
 class ASG_Snake;
+class ASG_Food;
 class AExponentialHeightFog;
 class UInputAction;
 class UInputMappingContext;
@@ -38,11 +39,14 @@ protected:
     UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "0.01", ClampMax = "10"), Category = "Settings")
     float GameSpeed{1.0};
 
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY(EditDefaultsOnly, Category = "Design")
     TSubclassOf<ASG_Grid> GridVisualClass;
 
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY(EditDefaultsOnly, Category = "Design")
     TSubclassOf<ASG_Snake> SnakeVisualClass;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Design")
+    TSubclassOf<ASG_Food> FoodVisualClass;
 
     UPROPERTY(EditDefaultsOnly, Category = "Design")
     UDataTable* ColorsTable;
@@ -69,6 +73,9 @@ private:
 
     UPROPERTY()
     ASG_Snake* SnakeVisual;
+
+    UPROPERTY()
+    ASG_Food* FoodVisual;
 
     UPROPERTY()
     AExponentialHeightFog* Fog;

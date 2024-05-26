@@ -19,12 +19,10 @@ public:
     ASG_Snake();
 
     void SetModel(const TSharedPtr<SnakeGame::Snake>& InSnake, uint32 InCellSize, const SnakeGame::Dimensions& InDims);
-    void UpdateColors(const FSnakeColors& Colors);
+    void UpdateColor(const FSnakeColors& Colors);
     virtual void Tick(float DeltaTime) override;
 
 protected:
-    virtual void BeginPlay() override;
-
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     TSubclassOf<ASG_SnakeLink> SnakeHeadClass;
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -34,6 +32,7 @@ private:
     TWeakPtr<SnakeGame::Snake> Snake;
     uint32 CellSize;
     SnakeGame::Dimensions Dims;
+    FLinearColor SnakeLinkColor;
 
     UPROPERTY()
     TArray<ASG_SnakeLink*> SnakeLinks;

@@ -30,6 +30,7 @@ void Game::update(float deltaSeconds, const Input& input)
     {
         m_gameOver = true;
         UE_LOG(LogGame, Display, TEXT("---------------GAME OVER---------------"));
+        UE_LOG(LogGame, Display, TEXT("-------------- SCORE: %i --------------"), m_score);
     }
 }
 
@@ -37,6 +38,12 @@ void Game::move(const Input& input)
 {
     m_snake->move(input);
     updateGrid();
+    if (foodTaken())
+    {
+        ++m_score;
+        m_snake->increase();
+        generateFood();
+    }
 }
 
 void Game::updateGrid()
@@ -61,8 +68,13 @@ bool SnakeGame::Game::died()
     return m_grid->hitTest(m_snake->getHead(), CellType::Wall) || m_grid->hitTest(m_snake->getHead(), CellType::Snake);
 }
 
-void SnakeGame::Game::generateFood() 
+void SnakeGame::Game::generateFood()
 {
     m_food->setPosition(m_grid->randomEmptyPosition());
     m_grid->update(m_food->getPosition(), CellType::Food);
+}
+
+bool SnakeGame::Game::foodTaken() const
+{
+    return m_grid->hitTest(m_snake->getHead(), CellType::Food);
 }
