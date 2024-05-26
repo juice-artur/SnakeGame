@@ -21,6 +21,7 @@ ASG_SnakeLink::ASG_SnakeLink()
 
 void ASG_SnakeLink::UpdateColor(const FLinearColor& Color)
 {
+    LinkColor = Color;
     if (auto* LinkMaterial = LinkMesh->CreateAndSetMaterialInstanceDynamic(0))
     {
         LinkMaterial->SetVectorParameterValue("Color", Color);
@@ -32,8 +33,11 @@ void ASG_SnakeLink::UpdateScale(uint32 CellSize)
     SnakeGame::WorldUtils::ScaleMesh(LinkMesh, FVector(CellSize));
 }
 
-void ASG_SnakeLink::Explode() 
+void ASG_SnakeLink::Explode()
 {
-    UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation());
+    if (auto* NS = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation()))
+    {
+        NS->SetNiagaraVariableLinearColor("SnakeColor", LinkColor);
+    }
     SetActorHiddenInGame(true);
 }

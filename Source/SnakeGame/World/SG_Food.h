@@ -44,6 +44,7 @@ private:
     TWeakPtr<SnakeGame::Food> Food;
     uint32 CellSize;
     SnakeGame::Dimensions Dims;
+    FLinearColor FoodColor;
 
     FVector GetFoodWorldLocation() const;
 };
