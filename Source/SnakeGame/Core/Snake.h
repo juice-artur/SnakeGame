@@ -16,10 +16,11 @@ public:
     const TPositionPtr* getBody() const { return m_links.GetHead()->GetNextNode(); }
 
     void move(const Input& input);
+    void increase();
 
 private:
     TSnakeList m_links;
-    Input m_lastInput{1, 0};
+    Input m_lastInput{Input::Default};
 };
 
 }  // namespace SnakeGame

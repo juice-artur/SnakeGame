@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Grid.h"
 #include "Snake.h"
+#include "Food.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogGame, All, All);
 
@@ -12,8 +13,9 @@ Game::Game(const Settings& settings) : c_settings(settings)
 {
     m_grid = MakeShared<Grid>(settings.gridSize);
     m_snake = MakeShared<Snake>(settings.snake);
-
+    m_food = MakeShared<Food>();
     updateGrid();
+    generateFood();
 }
 
 void Game::update(float deltaSeconds, const Input& input)
@@ -28,6 +30,7 @@ void Game::update(float deltaSeconds, const Input& input)
     {
         m_gameOver = true;
         UE_LOG(LogGame, Display, TEXT("---------------GAME OVER---------------"));
+        UE_LOG(LogGame, Display, TEXT("-------------- SCORE: %i --------------"), m_score);
     }
 }
 
@@ -35,11 +38,17 @@ void Game::move(const Input& input)
 {
     m_snake->move(input);
     updateGrid();
+    if (foodTaken())
+    {
+        ++m_score;
+        m_snake->increase();
+        generateFood();
+    }
 }
 
 void Game::updateGrid()
 {
-    m_grid->update(m_snake->getBody(), CellyType::Snake);
+    m_grid->update(m_snake->getBody(), CellType::Snake);
     m_grid->printDebug();
 }
 
@@ -56,5 +65,16 @@ bool Game::updateTime(float deltaSeconds)
 
 bool SnakeGame::Game::died()
 {
-    return m_grid->hitTest(m_snake->getHead(), CellyType::Wall) || m_grid->hitTest(m_snake->getHead(), CellyType::Snake);
+    return m_grid->hitTest(m_snake->getHead(), CellType::Wall) || m_grid->hitTest(m_snake->getHead(), CellType::Snake);
+}
+
+void SnakeGame::Game::generateFood()
+{
+    m_food->setPosition(m_grid->randomEmptyPosition());
+    m_grid->update(m_food->getPosition(), CellType::Food);
+}
+
+bool SnakeGame::Game::foodTaken() const
+{
+    return m_grid->hitTest(m_snake->getHead(), CellType::Food);
 }
