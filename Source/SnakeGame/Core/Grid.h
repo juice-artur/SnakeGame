@@ -18,7 +18,7 @@ public:
     void update(const Position& possition, CellType cellType);
     bool hitTest(const Position& possition, CellType cellType) const;
     static Position center(uint32 width, uint32 height) { return Position(width / 2 + 1, height / 2 + 1); }
-    Position randomEmptyPosition() const;
+    bool randomEmptyPosition(Position& position) const;
 
 private:
     const Dimensions c_dimensions;

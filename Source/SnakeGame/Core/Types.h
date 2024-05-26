@@ -20,12 +20,13 @@ struct Input
 
     FORCEINLINE bool opposite(const Input& rhs) const { return (x == -rhs.x && x != 0) || (y == -rhs.y && y != 0); }
 
-    static Input Default;
+    static const Input Default;
 };
 
 struct Position
 {
-    Position(uint32 inX, uint32 inY) : x(inX), y(inY){};
+    Position(uint32 inX, uint32 inY) : x(inX), y(inY) {}
+    Position(const Position& position = Position::Zero) : x(position.x), y(position.y) {}
     uint32 x;
     uint32 y;
 
@@ -38,7 +39,7 @@ struct Position
 
     FORCEINLINE bool operator==(const Position& rhs) { return x == rhs.x && y == rhs.y; }
 
-    static Position Zero;
+    static const Position Zero;
 };
 
 enum class CellType
@@ -67,10 +68,17 @@ class TSnakeList : public TDoubleLinkedList<Position>
 public:
     void MoveTail(TPositionPtr* Tail, TPositionPtr* Head, const Position& Pos)
     {
-        // @todo: make real movement of tail node without remove/insert
         RemoveNode(Tail);
         InsertNode(Pos, Head->GetNextNode());
     }
 };
 
+enum class GameplayEvent
+{
+    GameOver = 0,
+    GameCompleted,
+    FoodTaken
+};
+
+using GameplayEventCallback = TFunction<void(GameplayEvent)>;
 }  // namespace SnakeGame
