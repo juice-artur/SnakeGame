@@ -36,6 +36,7 @@ void ASG_Food::SetModel(const TSharedPtr<SnakeGame::Food>& InFood, uint32 InCell
     Dims = InDims;
 
     SnakeGame::WorldUtils::ScaleMesh(FoodMesh, FVector(CellSize));
+    SetActorHiddenInGame(false);
 }
 
 void ASG_Food::UpdateColor(const FLinearColor& Color)
@@ -53,6 +54,11 @@ void ASG_Food::Explode()
     {
         NS->SetNiagaraVariableLinearColor("SnakeColor", FoodColor);
     }
+}
+
+void ASG_Food::Hide()
+{
+    SetActorHiddenInGame(true);
 }
 
 FVector ASG_Food::GetFoodWorldLocation() const
