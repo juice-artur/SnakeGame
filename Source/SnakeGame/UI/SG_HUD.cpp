@@ -11,14 +11,20 @@ void ASG_HUD::BeginPlay()
 
     GameplayWidget = CreateWidget<USG_GameplayWidget>(GetWorld(), GameplayWidgetClass);
     check(GameplayWidget);
-
-    GameplayWidget->AddToViewport();
+    GameWidgets.Add(EUIGameState::GameInProgress, GameplayWidget);
 
     GameOverWidget = CreateWidget<USG_GameOverWidget>(GetWorld(), GameOverWidgetClass);
     check(GameOverWidget);
+    GameWidgets.Add(EUIGameState::GameOver, GameOverWidget);
 
-    GameOverWidget->AddToViewport();
-    GameOverWidget->SetVisibility(ESlateVisibility::Collapsed);
+    for (auto& [UIState, GameWidget] : GameWidgets)
+    {
+        if (GameWidget)
+        {
+            GameWidget->AddToViewport();
+            GameWidget->SetVisibility(ESlateVisibility::Collapsed);
+        }
+    }
 }
 
 void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
@@ -31,8 +37,7 @@ void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
     using namespace SnakeGame;
 
     Game = InGame;
-    GameplayWidget->SetVisibility(ESlateVisibility::Visible);
-    GameOverWidget->SetVisibility(ESlateVisibility::Collapsed);
+    SetUIMatchState(EUIGameState::GameInProgress);
     GameplayWidget->UpdateScore(InGame->getScore());
 
     InGame->subscribeOnGameplayEvent(
@@ -45,8 +50,7 @@ void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
                     break;
 
                 case GameplayEvent::GameOver:  //
-                    GameplayWidget->SetVisibility(ESlateVisibility::Collapsed);
-                    GameOverWidget->SetVisibility(ESlateVisibility::Visible);
+                    SetUIMatchState(EUIGameState::GameOver);
                     break;
             }
         });
@@ -56,8 +60,24 @@ void ASG_HUD::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
-    if (Game.IsValid())
+    if (Game.IsValid() && GameState == EUIGameState::GameInProgress)
     {
         GameplayWidget->SetGameTime(Game.Pin()->getGameTime());
     }
+}
+
+void ASG_HUD::SetUIMatchState(EUIGameState InGameState)
+{
+    if (CurrentWidget)
+    {
+        CurrentWidget->SetVisibility(ESlateVisibility::Collapsed);
+    }
+
+    if (GameWidgets.Contains(InGameState))
+    {
+        CurrentWidget = GameWidgets[InGameState];
+        CurrentWidget->SetVisibility(ESlateVisibility::Visible);
+    }
+
+    GameState = InGameState;
 }
