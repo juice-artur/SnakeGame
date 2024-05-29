@@ -38,7 +38,7 @@ void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
 
     Game = InGame;
     SetUIMatchState(EUIGameState::GameInProgress);
-    GameplayWidget->UpdateScore(InGame->getScore());
+    GameplayWidget->SetScore(InGame->getScore());
 
     InGame->subscribeOnGameplayEvent(
         [&](GameplayEvent Event)
@@ -46,10 +46,11 @@ void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
             switch (Event)
             {
                 case GameplayEvent::FoodTaken:  //
-                    GameplayWidget->UpdateScore(InGame->getScore());
+                    GameplayWidget->SetScore(InGame->getScore());
                     break;
 
                 case GameplayEvent::GameOver:  //
+                    GameOverWidget->SetScore(InGame->getScore());
                     SetUIMatchState(EUIGameState::GameOver);
                     break;
             }
@@ -80,4 +81,10 @@ void ASG_HUD::SetUIMatchState(EUIGameState InGameState)
     }
 
     GameState = InGameState;
+}
+
+void ASG_HUD::SetInputKeyNames(const FString& ResetGameKeyName)
+{
+    GameplayWidget->SetResetGameKeyName(ResetGameKeyName);
+    GameOverWidget->SetResetGameKeyName(ResetGameKeyName);
 }

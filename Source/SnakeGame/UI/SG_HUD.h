@@ -31,6 +31,7 @@ class SNAKEGAME_API ASG_HUD : public AHUD
 public:
     void SetModel(const TSharedPtr<SnakeGame::Game>& InGame);
     virtual void Tick(float DeltaSeconds) override;
+    void SetInputKeyNames(const FString& ResetGameKeyName);
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "UI")
