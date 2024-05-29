@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "UI/SG_HUD.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSnakeGameMode, All, All);
 
@@ -55,6 +56,9 @@ void ASG_GameMode::StartPlay()
     UpdateColors();
 
     SetupInput();
+
+    HUD = Cast<ASG_HUD>(PC->GetHUD());
+    check(HUD);
 }
 
 void ASG_GameMode::NextColor()
@@ -146,6 +150,8 @@ void ASG_GameMode::Tick(float DeltaSeconds)
     if (Game.IsValid())
     {
         Game->update(DeltaSeconds, SnakeInput);
+        HUD->SetGameTime(Game->getGameTime());
+        HUD->UpdateScore(Game->getScore());
     }
 }
 
@@ -174,13 +180,13 @@ void ASG_GameMode::SubscribeOnGameEvents()
             {
                 case GameplayEvent::GameOver:
                     UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME OVER --------------"));
-                    UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
+                    UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->getScore());
                     SnakeVisual->Explode();
                     FoodVisual->Hide();
                     break;
                 case GameplayEvent::GameCompleted:
                     UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME COMPLETED --------------"));
-                    UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
+                    UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->getScore());
                     break;
                 case GameplayEvent::FoodTaken:  //
                     UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- FOOD TAKEN --------------"));

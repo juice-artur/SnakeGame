@@ -54,6 +54,7 @@ void Game::updateGrid()
 
 bool Game::updateTime(float deltaSeconds)
 {
+    m_gameTime += deltaSeconds;
     m_moveSeconds += deltaSeconds;
     if (m_moveSeconds < c_settings.gameSpeed)
     {

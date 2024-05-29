@@ -20,7 +20,8 @@ public:
     TSharedPtr<Food> getFood() const { return m_food; }
     void update(float deltaSeconds, const Input& input);
 
-    uint32 score() const { return m_score; }
+    uint32 getScore() const { return m_score; }
+    float getGameTime() const { return m_gameTime; }
 
     void subscribeOnGameplayEvent(GameplayEventCallback callback);
 
@@ -32,9 +33,10 @@ private:
 
     GameplayEventCallback m_gameplayEventCallback;
 
-    float m_moveSeconds = 0.0f;
+    float m_moveSeconds{0.0f};
     bool m_gameOver{false};
     uint32 m_score{0};
+    float m_gameTime{0.0f};
 
     void move(const Input& input);
     void updateGrid();
