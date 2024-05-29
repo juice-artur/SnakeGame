@@ -13,6 +13,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "UI/SG_HUD.h"
+#include <World/SG_WorldUtils.h>
 
 DEFINE_LOG_CATEGORY_STATIC(LogSnakeGameMode, All, All);
 
@@ -20,7 +22,7 @@ void ASG_GameMode::StartPlay()
 {
     Super::StartPlay();
 
-    Game = MakeUnique<SnakeGame::Game>(MakeSettings());
+    Game = MakeShared<SnakeGame::Game>(MakeSettings());
     check(Game.IsValid());
     SubscribeOnGameEvents();
 
@@ -55,6 +57,13 @@ void ASG_GameMode::StartPlay()
     UpdateColors();
 
     SetupInput();
+
+    HUD = Cast<ASG_HUD>(PC->GetHUD());
+    check(HUD);
+    HUD->SetModel(Game);
+
+    const FString ResetGameKeyName = SnakeGame::WorldUtils::FindActionKeyName(InputMapping, ResetGameInputAction);
+    HUD->SetInputKeyNames(ResetGameKeyName);
 }
 
 void ASG_GameMode::NextColor()
@@ -118,12 +127,13 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 {
     if (const bool InputValue = Value.Get<bool>())
     {
-        Game.Reset(new SnakeGame::Game(MakeSettings()));
+        Game = MakeShared<SnakeGame::Game>(MakeSettings());
         check(Game.IsValid());
         SubscribeOnGameEvents();
         GridVisual->SetModel(Game->getGrid(), CellSize);
         SnakeVisual->SetModel(Game->getSnake(), CellSize, Game->getGrid()->getDimensions());
         FoodVisual->SetModel(Game->getFood(), CellSize, Game->getGrid()->getDimensions());
+        HUD->SetModel(Game);
         SnakeInput = SnakeGame::Input::Default;
         NextColor();
     }
@@ -174,12 +184,13 @@ void ASG_GameMode::SubscribeOnGameEvents()
             {
                 case GameplayEvent::GameOver:
                     UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME OVER --------------"));
-                    UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
+                    UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->getScore());
                     SnakeVisual->Explode();
+                    FoodVisual->Hide();
                     break;
                 case GameplayEvent::GameCompleted:
                     UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME COMPLETED --------------"));
-                    UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
+                    UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->getScore());
                     break;
                 case GameplayEvent::FoodTaken:  //
                     UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- FOOD TAKEN --------------"));
