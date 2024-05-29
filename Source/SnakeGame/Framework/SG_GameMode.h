@@ -66,7 +66,7 @@ protected:
 
 private:
     uint32 ColorTableIndex{0};
-    TUniquePtr<SnakeGame::Game> Game;
+    TSharedPtr<SnakeGame::Game> Game;
     SnakeGame::Input SnakeInput{SnakeGame::Input::Default};
 
     UPROPERTY()

@@ -31,7 +31,7 @@ private:
     TSharedPtr<Snake> m_snake;
     TSharedPtr<Food> m_food;
 
-    GameplayEventCallback m_gameplayEventCallback;
+    TArray<GameplayEventCallback> m_gameplayEventCallbacks;
 
     float m_moveSeconds{0.0f};
     bool m_gameOver{false};

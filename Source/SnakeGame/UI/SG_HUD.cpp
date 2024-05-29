@@ -1,11 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "UI/SG_HUD.h"
+#include "Core/Game.h"
 #include "UI/SG_GameplayWidget.h"
 
-
-void ASG_HUD::BeginPlay() 
+void ASG_HUD::BeginPlay()
 {
     Super::BeginPlay();
 
@@ -15,12 +14,36 @@ void ASG_HUD::BeginPlay()
     GameplayWidget->AddToViewport();
 }
 
-void ASG_HUD::SetGameTime(float Time) 
+void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
 {
-    GameplayWidget->SetGameTime(Time);
+    if (!InGame)
+    {
+        return;
+    }
+
+    using namespace SnakeGame;
+
+    Game = InGame;
+    GameplayWidget->UpdateScore(InGame->getScore());
+
+    InGame->subscribeOnGameplayEvent(
+        [&](GameplayEvent Event)
+        {
+            switch (Event)
+            {
+                case GameplayEvent::FoodTaken:  //
+                    GameplayWidget->UpdateScore(InGame->getScore());
+                    break;
+            }
+        });
 }
 
-void ASG_HUD::UpdateScore(uint32 Score) 
+void ASG_HUD::Tick(float DeltaSeconds)
 {
-    GameplayWidget->UpdateScore(Score);
+    Super::Tick(DeltaSeconds);
+
+    if (Game.IsValid())
+    {
+        GameplayWidget->SetGameTime(Game.Pin()->getGameTime());
+    }
 }

@@ -21,7 +21,7 @@ void ASG_GameMode::StartPlay()
 {
     Super::StartPlay();
 
-    Game = MakeUnique<SnakeGame::Game>(MakeSettings());
+    Game = MakeShared<SnakeGame::Game>(MakeSettings());
     check(Game.IsValid());
     SubscribeOnGameEvents();
 
@@ -59,6 +59,7 @@ void ASG_GameMode::StartPlay()
 
     HUD = Cast<ASG_HUD>(PC->GetHUD());
     check(HUD);
+    HUD->SetModel(Game);
 }
 
 void ASG_GameMode::NextColor()
@@ -122,7 +123,7 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 {
     if (const bool InputValue = Value.Get<bool>())
     {
-        Game.Reset(new SnakeGame::Game(MakeSettings()));
+        Game = MakeShared<SnakeGame::Game>(MakeSettings());
         check(Game.IsValid());
         SubscribeOnGameEvents();
         GridVisual->SetModel(Game->getGrid(), CellSize);
@@ -150,8 +151,6 @@ void ASG_GameMode::Tick(float DeltaSeconds)
     if (Game.IsValid())
     {
         Game->update(DeltaSeconds, SnakeInput);
-        HUD->SetGameTime(Game->getGameTime());
-        HUD->UpdateScore(Game->getScore());
     }
 }
 

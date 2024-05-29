@@ -8,14 +8,19 @@
 
 class USG_GameplayWidget;
 
+namespace SnakeGame
+{
+class Game;
+}  // namespace SnakeGame
+
 UCLASS()
 class SNAKEGAME_API ASG_HUD : public AHUD
 {
     GENERATED_BODY()
 
 public:
-    void SetGameTime(float Time);
-    void UpdateScore(uint32 Score);
+    void SetModel(const TSharedPtr<SnakeGame::Game>& InGame);
+    virtual void Tick(float DeltaSeconds) override;
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "UI")
@@ -26,4 +31,6 @@ protected:
 private:
     UPROPERTY()
     TObjectPtr<USG_GameplayWidget> GameplayWidget;
+
+    TWeakPtr<SnakeGame::Game> Game;
 };

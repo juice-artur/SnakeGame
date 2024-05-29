@@ -89,15 +89,18 @@ bool SnakeGame::Game::foodTaken() const
     return m_grid->hitTest(m_snake->getHead(), CellType::Food);
 }
 
-void Game::subscribeOnGameplayEvent(GameplayEventCallback callback) 
+void Game::subscribeOnGameplayEvent(GameplayEventCallback callback)
 {
-    m_gameplayEventCallback = callback;
+    m_gameplayEventCallbacks.Add(callback);
 }
 
 void Game::dispatchEvent(GameplayEvent Event)
 {
-    if (m_gameplayEventCallback)
+    for (const auto& callback : m_gameplayEventCallbacks)
     {
-        m_gameplayEventCallback(Event);
+        if (callback)
+        {
+            callback(Event);
+        }
     }
 }
