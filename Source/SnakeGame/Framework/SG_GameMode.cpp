@@ -129,6 +129,7 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
         GridVisual->SetModel(Game->getGrid(), CellSize);
         SnakeVisual->SetModel(Game->getSnake(), CellSize, Game->getGrid()->getDimensions());
         FoodVisual->SetModel(Game->getFood(), CellSize, Game->getGrid()->getDimensions());
+        HUD->SetModel(Game);
         SnakeInput = SnakeGame::Input::Default;
         NextColor();
     }

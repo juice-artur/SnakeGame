@@ -3,6 +3,7 @@
 #include "UI/SG_HUD.h"
 #include "Core/Game.h"
 #include "UI/SG_GameplayWidget.h"
+#include "UI/SG_GameOverWidget.h"
 
 void ASG_HUD::BeginPlay()
 {
@@ -12,6 +13,12 @@ void ASG_HUD::BeginPlay()
     check(GameplayWidget);
 
     GameplayWidget->AddToViewport();
+
+    GameOverWidget = CreateWidget<USG_GameOverWidget>(GetWorld(), GameOverWidgetClass);
+    check(GameOverWidget);
+
+    GameOverWidget->AddToViewport();
+    GameOverWidget->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
@@ -24,6 +31,8 @@ void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
     using namespace SnakeGame;
 
     Game = InGame;
+    GameplayWidget->SetVisibility(ESlateVisibility::Visible);
+    GameOverWidget->SetVisibility(ESlateVisibility::Collapsed);
     GameplayWidget->UpdateScore(InGame->getScore());
 
     InGame->subscribeOnGameplayEvent(
@@ -33,6 +42,11 @@ void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
             {
                 case GameplayEvent::FoodTaken:  //
                     GameplayWidget->UpdateScore(InGame->getScore());
+                    break;
+
+                case GameplayEvent::GameOver:  //
+                    GameplayWidget->SetVisibility(ESlateVisibility::Collapsed);
+                    GameOverWidget->SetVisibility(ESlateVisibility::Visible);
                     break;
             }
         });

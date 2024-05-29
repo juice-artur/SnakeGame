@@ -7,6 +7,7 @@
 #include "SG_HUD.generated.h"
 
 class USG_GameplayWidget;
+class USG_GameOverWidget;
 
 namespace SnakeGame
 {
@@ -26,11 +27,17 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "UI")
     TSubclassOf<USG_GameplayWidget> GameplayWidgetClass;
 
+    UPROPERTY(EditDefaultsOnly, Category = "UI")
+    TSubclassOf<USG_GameOverWidget> GameOverWidgetClass;
+
     virtual void BeginPlay() override;
 
 private:
     UPROPERTY()
     TObjectPtr<USG_GameplayWidget> GameplayWidget;
+
+    UPROPERTY()
+    TObjectPtr<USG_GameOverWidget> GameOverWidget;
 
     TWeakPtr<SnakeGame::Game> Game;
 };
