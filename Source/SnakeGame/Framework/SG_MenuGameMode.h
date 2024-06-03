@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class SNAKEGAME_API ASH_MenuGameMode : public AGameModeBase
+class SNAKEGAME_API ASG_MenuGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
