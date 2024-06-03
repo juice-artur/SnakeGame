@@ -32,6 +32,7 @@ public:
     void SetModel(const TSharedPtr<SnakeGame::Game>& InGame);
     virtual void Tick(float DeltaSeconds) override;
     void SetInputKeyNames(const FString& ResetGameKeyName);
+    ASG_HUD();
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "UI")
@@ -58,5 +59,5 @@ private:
     TWeakPtr<SnakeGame::Game> Game;
     EUIGameState GameState;
 
-    void SetUIMatchState(EUIGameState InGameState);
+    void SetUIGameState(EUIGameState InGameState);
 };
