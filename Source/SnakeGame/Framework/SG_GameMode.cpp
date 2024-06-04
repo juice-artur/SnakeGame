@@ -15,6 +15,7 @@
 #include "EnhancedInputComponent.h"
 #include "UI/SG_HUD.h"
 #include <World/SG_WorldUtils.h>
+#include "Framework/SG_GameUserSettings.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSnakeGameMode, All, All);
 
@@ -64,6 +65,8 @@ void ASG_GameMode::StartPlay()
 
     const FString ResetGameKeyName = SnakeGame::WorldUtils::FindActionKeyName(InputMapping, ResetGameInputAction);
     HUD->SetInputKeyNames(ResetGameKeyName);
+
+    SnakeGame::WorldUtils::SetUIInput(GetWorld(), false);
 }
 
 void ASG_GameMode::NextColor()
@@ -136,6 +139,8 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
         HUD->SetModel(Game);
         SnakeInput = SnakeGame::Input::Default;
         NextColor();
+
+        SnakeGame::WorldUtils::SetUIInput(GetWorld(), false);
     }
 }
 
@@ -167,10 +172,23 @@ ASG_GameMode::ASG_GameMode()
 SnakeGame::Settings ASG_GameMode::MakeSettings() const
 {
     SnakeGame::Settings GS;
-    GS.gridSize = SnakeGame::Dimensions{GridSize.X, GridSize.Y};
-    GS.gameSpeed = GameSpeed;
+
+#if WITH_EDITOR
+    if (bOverrideUserSettings)
+    {
+        GS.gridSize = SnakeGame::Dimensions{GridDims.X, GridDims.Y};
+        GS.gameSpeed = GameSpeed;
+    }
+    else
+#endif
+        if (const auto* UserSettings = USG_GameUserSettings::Get())
+    {
+        GS.gridSize = UserSettings->GridSize();
+        GS.gameSpeed = UserSettings->GameSpeed();
+    }
+
     GS.snake.defaultSize = SnakeDefaultSize;
-    GS.snake.startPosition = SnakeGame::Grid::center(GridSize.X, GridSize.Y);
+    GS.snake.startPosition = SnakeGame::Grid::center(GS.gridSize.width, GS.gridSize.height);
     return GS;
 }
 
@@ -187,6 +205,7 @@ void ASG_GameMode::SubscribeOnGameEvents()
                     UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->getScore());
                     SnakeVisual->Explode();
                     FoodVisual->Hide();
+                    WorldUtils::SetUIInput(GetWorld(), true);
                     break;
                 case GameplayEvent::GameCompleted:
                     UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME COMPLETED --------------"));
