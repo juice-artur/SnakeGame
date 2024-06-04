@@ -28,17 +28,24 @@ public:
     ASG_GameMode();
 
 protected:
-    UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "10", ClampMax = "100"), Category = "Settings")
-    FUintPoint GridSize{10, 10};
+    UPROPERTY(EditDefaultsOnly, Category = "Settings")
+    bool bOverrideUserSettings{false};
 
-    UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "10", ClampMax = "100"), Category = "Settings")
-    int32 CellSize{10};
+    UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "10", ClampMax = "100", EditCondition = "bOverrideUserSettings", EditConditionHides),
+        Category = "Settings")
+    FUintPoint GridDims{10, 10};
 
-    UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "4", ClampMax = "10"), Category = "Settings")
-    int32 SnakeDefaultSize{5};
+    UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "10", ClampMax = "100", EditCondition = "bOverrideUserSettings", EditConditionHides),
+        Category = "Settings")
+    uint32 CellSize{10};
 
-    UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "0.01", ClampMax = "10"), Category = "Settings")
-    float GameSpeed{1.0};
+    UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "4", ClampMax = "10", EditCondition = "bOverrideUserSettings", EditConditionHides),
+        Category = "Settings")
+    uint32 SnakeDefaultSize{5};
+
+    UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "0.01", ClampMax = "10", EditCondition = "bOverrideUserSettings", EditConditionHides),
+        Category = "Settings")
+    float GameSpeed{1.0f};
 
     UPROPERTY(EditDefaultsOnly, Category = "Design")
     TSubclassOf<ASG_Grid> GridVisualClass;

@@ -15,6 +15,7 @@
 #include "EnhancedInputComponent.h"
 #include "UI/SG_HUD.h"
 #include <World/SG_WorldUtils.h>
+#include "Framework/SG_GameUserSettings.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSnakeGameMode, All, All);
 
@@ -167,10 +168,23 @@ ASG_GameMode::ASG_GameMode()
 SnakeGame::Settings ASG_GameMode::MakeSettings() const
 {
     SnakeGame::Settings GS;
-    GS.gridSize = SnakeGame::Dimensions{GridSize.X, GridSize.Y};
-    GS.gameSpeed = GameSpeed;
+
+#if WITH_EDITOR
+    if (bOverrideUserSettings)
+    {
+        GS.gridSize = SnakeGame::Dimensions{GridDims.X, GridDims.Y};
+        GS.gameSpeed = GameSpeed;
+    }
+    else
+#endif
+    if (const auto* UserSettings = USG_GameUserSettings::Get())
+    {
+        GS.gridSize = UserSettings->GridSize();
+        GS.gameSpeed = UserSettings->GameSpeed();
+    }
+
     GS.snake.defaultSize = SnakeDefaultSize;
-    GS.snake.startPosition = SnakeGame::Grid::center(GridSize.X, GridSize.Y);
+    GS.snake.startPosition = SnakeGame::Grid::center(GS.gridSize.width, GS.gridSize.height);
     return GS;
 }
 
