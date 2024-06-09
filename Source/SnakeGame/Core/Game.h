@@ -41,7 +41,7 @@ private:
     void move(const Input& input);
     void updateGrid();
     bool updateTime(float deltaSeconds);
-    bool died();
+    bool died(const Position& prevTailPosition) const;
     void generateFood();
     bool foodTaken() const;
 
