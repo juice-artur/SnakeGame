@@ -12,6 +12,7 @@ public:
     Snake(const Settings::Snake& settings);
 
     const TSnakeList& getLinks() const { return m_links; }
+    const Position getTail() const { return m_links.GetTail()->GetValue(); }
     Position getHead() const { return m_links.GetHead()->GetValue(); }
     const TPositionPtr* getBody() const { return m_links.GetHead()->GetNextNode(); }
 
